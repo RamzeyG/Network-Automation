@@ -1,0 +1,10 @@
+enable
+hostname R1
+ip domain name NAME_HERE
+crypto key generate rsa
+1024
+line vty 0 15
+transport input ssh
+login local
+ip ssh ver 2
+username SSH_USER_NAME privilege 15 password SSH_PASSWORD

@@ -1,0 +1,144 @@
+############# BEGIN CONFIGURATION FOR sw-leaf-tx-01 ###########
+!
+interface Ethernet47
+description MLAG to sw-mgmt-01 Ethernet47
+speed forced 1000full
+channel-group 47 mode active
+!
+interface Port-Channel47
+description MLAG to sw-mgmt-01
+switchport mode trunk
+mlag 47
+!
+############# BEGIN CONFIGURATION FOR sw-leaf-tx-02 ###########
+!
+interface Ethernet47
+description MLAG to sw-mgmt-01 Ethernet48
+speed forced 1000full
+channel-group 47 mode active
+!
+interface Port-Channel47
+description MLAG to sw-mgmt-01
+switchport mode trunk
+mlag 47
+!
+############# BEGIN CONFIGURATION FOR sw-leaf-tx-03 ###########
+!
+interface Ethernet47
+description MLAG to sw-mgmt-02 Ethernet47
+speed forced 1000full
+channel-group 47 mode active
+!
+interface Port-Channel47
+description MLAG to sw-mgmt-02
+switchport mode trunk
+mlag 47
+!
+############# BEGIN CONFIGURATION FOR sw-leaf-tx-04 ###########
+!
+interface Ethernet47
+description MLAG to sw-mgmt-02 Ethernet48
+speed forced 1000full
+channel-group 47 mode active
+!
+interface Port-Channel47
+description MLAG to sw-mgmt-02
+switchport mode trunk
+mlag 47
+!
+############# BEGIN CONFIGURATION FOR sw-leaf-tx-05 ###########
+!
+interface Ethernet47
+description MLAG to sw-mgmt-03 Ethernet47
+speed forced 1000full
+channel-group 47 mode active
+!
+interface Port-Channel47
+description MLAG to sw-mgmt-03
+switchport mode trunk
+mlag 47
+!
+############# BEGIN CONFIGURATION FOR sw-leaf-tx-06 ###########
+!
+interface Ethernet47
+description MLAG to sw-mgmt-03 Ethernet48
+speed forced 1000full
+channel-group 47 mode active
+!
+interface Port-Channel47
+description MLAG to sw-mgmt-03
+switchport mode trunk
+mlag 47
+!
+############# BEGIN CONFIGURATION FOR sw-leaf-tx-07 ###########
+!
+interface Ethernet47
+description MLAG to sw-mgmt-04 Ethernet47
+speed forced 1000full
+channel-group 47 mode active
+!
+interface Port-Channel47
+description MLAG to sw-mgmt-04
+switchport mode trunk
+mlag 47
+!
+############# BEGIN CONFIGURATION FOR sw-leaf-tx-08 ###########
+!
+interface Ethernet47
+description MLAG to sw-mgmt-04 Ethernet48
+speed forced 1000full
+channel-group 47 mode active
+!
+interface Port-Channel47
+description MLAG to sw-mgmt-04
+switchport mode trunk
+mlag 47
+!
+############# BEGIN CONFIGURATION FOR sw-leaf-tx-09 ###########
+!
+interface Ethernet47
+description MLAG to sw-mgmt-05 Ethernet47
+speed forced 1000full
+channel-group 47 mode active
+!
+interface Port-Channel47
+description MLAG to sw-mgmt-05
+switchport mode trunk
+mlag 47
+!
+############# BEGIN CONFIGURATION FOR sw-leaf-tx-10 ###########
+!
+interface Ethernet47
+description MLAG to sw-mgmt-05 Ethernet48
+speed forced 1000full
+channel-group 47 mode active
+!
+interface Port-Channel47
+description MLAG to sw-mgmt-05
+switchport mode trunk
+mlag 47
+!
+############# BEGIN CONFIGURATION FOR sw-leaf-tx-09 ###########
+!
+interface Ethernet47
+description MLAG to sw-mgmt-06 Ethernet47
+speed forced 1000full
+channel-group 47 mode active
+!
+interface Port-Channel47
+description MLAG to sw-mgmt-06
+switchport mode trunk
+mlag 47
+!
+############# BEGIN CONFIGURATION FOR sw-leaf-tx-10 ###########
+!
+interface Ethernet47
+description MLAG to sw-mgmt-06 Ethernet48
+speed forced 1000full
+channel-group 47 mode active
+!
+interface Port-Channel47
+description MLAG to sw-mgmt-06
+switchport mode trunk
+mlag 47
+!

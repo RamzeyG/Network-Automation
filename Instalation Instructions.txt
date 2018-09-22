@@ -1,0 +1,16 @@
+use the following commands to be able to run my script:
+
+Please use Git.
+First Install git and clone the repository. Accessing the script from git
+ensures you always have the most updated version. Use "git pull" when in the
+project directory to get the latest updates.
+
+
+         On Ubuntu:
+sudo apt install git -y
+git clone 
+sudo apt install python
+sudo apt install python-pip
+pip install paramiko
+pip install argparse
+pip install pexpect
