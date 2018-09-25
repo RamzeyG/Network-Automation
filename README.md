@@ -1,7 +1,7 @@
 # Network-Automation
-Generic SSH script to execute CLI commands on any device that can be accessed over SSH. But networking devices is the priority of this project
+A Generic SSH script to execute CLI commands on any device that can be accessed over SSH. Networking devices are the priority of this project. If you find a bug or want a new feature, submit an issue inthe issues tab!
 
-# Instalation
+# Installation
 Use the following commands to be able to run my script:
 
 Please use Git.
