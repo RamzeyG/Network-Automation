@@ -1,0 +1,6 @@
+en
+conf t
+interface Ethernet1
+ip address 10.43.0.3/24
+exit
+write memory

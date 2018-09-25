@@ -45,7 +45,7 @@ we have multiple options:
    By default, the program assumes you are having one file per device. This file contains the configuration commands you want to apply to this particualr device. The name of the file must be the IP address of the device you want to apply commands to (with no file extentions). Eventually I would like to allow the user to exclude commands like "conf t", "enable", "write mem", etc. but for now they need to be entered manually into the configuration file.
    
     Once this is done, simply run the program: ```python ssh_automate.py```
-    The output of the terminal will be saved into a file with with the following name: ```<ip_address>-output-<device_host_name>.txt```
+    The output of the terminal will be saved into a file with with the following name: ```output-<ip_address>-<device_host_name>.txt```
 
 2. Using a single configuration file on multiple devices (opposite of option 1)
    

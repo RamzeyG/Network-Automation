@@ -10,13 +10,13 @@ import re
 import pexpect
 
 #              ssh_automate.py
-# This is a simple program that ssh's into Networkig devices and
+# This is a simple program that ssh's into Networking devices and
 # gets the interface configuration. This program requires all devices'
 # ssh information reside in the file "config.txt", which should be in the
 # same directory as this script.
 #
 # This program assumes devices are already set up for ssh (instructions
-# can be found in the file "sshSetupCisco.txt"
+# can be found in the file "sshSetupCisco.txt" for Cisco devices)
 
 
 parser = argparse.ArgumentParser()
@@ -92,14 +92,14 @@ def readFile(fileName):
 	numOfDevices = 0
 	readfile = open("log in credentials.txt", "r")
 	for line in readfile:
-		# Skip commented out
-		if not line.startswith('#') and not line.startswith('//'):
+		# Skip commented out and blank lines (\n) which have a len of 2
+		if not line.startswith('#') and not line.startswith('//') and len(line) > 2:
 			line = line.strip("\r\n")
 			line = line.split(" ")
 			deviceList.append([line[0], line[1], line[2]])
 			numOfDevices += 1
-
 	return numOfDevices, deviceList
+
 
 
 
@@ -110,6 +110,9 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 		print 'Kevin flag is on'
 		global begin_found
 		global start
+		# start = 0
+
+		# print begin_found
 		command_list = open(ip_commands, 'w')
 		kevin_file = open(k_file_name, 'r')
 
@@ -117,17 +120,17 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 			while begin_found <= start:
 				if line.startswith('######') and 'BEGIN CONFIG' in line:
 					begin_found += 1
-				else:
+				elif begin_found == start:
 					command_list.write(line.strip() + '\n')
 					print 'Writing the following cmd: ['+ line.strip()+']'
 
 				line = kevin_file.next()
 		command_list.close()
-		start = begin_found
-		print 'exiting now, remove this statement in the future'
-		exit()
-	new_file = 'output-' + device_name + '.txt'
-	result = open(new_file, 'w')
+		start += 1
+		begin_found = -1
+	print 'AFTER: ', 	begin_found, start
+	new_file = 'output-' + device_name # + '.txt'
+	# result = open(new_file, 'w')
 	command_list = open(ip_commands, 'r')
 	config_cmds = conf.split('\n')
 
@@ -138,7 +141,8 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 	# 	time.sleep(3)
 	# 	output = ssh_remote.recv(655350)
 	# 	print_cmd_completion_status(curr_cmd, output)
-
+	hostname = ''
+	first_run = 1
 	# executing user commands
 	for line in command_list:
 
@@ -148,29 +152,64 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 
 			# Now we can execute commands
 			ssh_remote.send(line.lstrip())
-			if 'show ' in line:
+			if 'show' in line:
 				time.sleep(5)
 			else:
 				time.sleep(1)
 
+
 			# Continue to read from buffer until output is done.
-			rcv_timeout = 5
+			rcv_timeout = 6
 			interval_length = 1
+			hostname_found = False
+			new_output = ''
 			while True:
 				if ssh_remote.recv_ready():
 					output = ssh_remote.recv(1024)
-					new_output = ''
+
+					# Remove unwanted chars
 					for x in output:
 						new_output += (re.compile(r'\x1b[^m]*m')).sub('', x)
-					print new_output
-					result.write(new_output)
+
+				# If recv buffer is empty (we got all the output)
 				else:
 					rcv_timeout -= interval_length
 				if rcv_timeout < 0:
+					print 'FIRST RUN IS: ', first_run
+					if first_run:
+						print 'ABOUT TO GET PROMPT'
+						hostname = ssh_remote.recv(1024)
+						print hostname
+						if '# ' in hostname:
+							rm_prompt = hostname.split('#')
+							hostname = rm_prompt[0]
+							hostname_found = True
+						elif '> ' in hostname:
+							rm_prompt = hostname.split('>')
+							hostname = rm_prompt[0]
+							hostname_found = True
+						# Look for" hostname(currentmode)"
+						if '(' in hostname:
+							rm_parenthesis = hostname.split('(')
+							hostname = rm_parenthesis[0]
+						# Look for username@hostname
+						if '@' in hostname:
+							rm_user = hostname.split('@')
+							hostname = rm_user[1]
+
+						if hostname_found:
+							new_file += '-' + hostname + '.txt'
+							result = open(new_file, 'w')
+							first_run = False
+						if not hostname_found:
+							print 'DID NOT FIND HOSTNAME, exiting program'
+							exit()
+						first_run = False
 					break
 
 			print_cmd_completion_status(curr_cmd, output)
-
+			# Write output to the output file
+			result.write(new_output)
 			result.write('\n')
 	result.close()
 	return new_file
@@ -180,12 +219,11 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 
 #Read in file for address, username and password
 numOfDevices, deviceList = readFile("log in credentials.txt")
-
+global begin_found
+global start
+start = 0  # 0
+begin_found = -1  # -1
 if kevin_file:
-	global begin_found
-	global start
-	start = 0
-	begin_found = 0
 	kevin_flag = True
 	print 'KEVIN FILE'
 output_files_list = []
@@ -193,6 +231,7 @@ output_files_list = []
 
 for i in range(numOfDevices):
 	print "********** Now Going into device: ", deviceList[i][0], " ************"
+	print begin_found, start
 	ssh.connect(deviceList[i][0], port=22, username=deviceList[i][1], password=deviceList[i][2], look_for_keys=False)
 
 	ssh_remote = ssh.invoke_shell()
@@ -214,7 +253,8 @@ for z in range(0, len(output_files_list), 1):
 	title = title.strip('.txt')
 
 	print 'Device ' + title + ' Errors'
-
+	# Palo alto key word is "Unknown command:"
+	# Arista and Cisco key word is: "Invalid"
 	cmd = 'cat ' + output_files_list[i] + ' | grep -B 2 Invalid'
 	print cmd
 	process = pexpect.spawn('/bin/bash')

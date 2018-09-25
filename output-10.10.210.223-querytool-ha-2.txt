@@ -1,0 +1,7 @@
+Last login: Mon Sep 24 16:48:53 2018 from 10.11.110.33
+interface Ethernet47
+
+Number of failed attempts since last successful login: 0
+
+
+
