@@ -50,7 +50,8 @@ we have multiple options:
     channel-group 66 mode active
     !
     ```
-    IMPORTANT: Make sure you keep the log in credentials in the credentials file the same order as the device commands noted above. The 
- This file is called a kevin file. To run the program using this method, use the following syntax: ```python ssh_automate.py -kfile <file_name>```
+    IMPORTANT: Make sure you keep the log in credentials in the credentials file the same order as the device commands noted above.
+    
+   This file is called a kevin file. To run the program using this method, use the following syntax: ```python ssh_automate.py -kfile <file_name>```
  
  
