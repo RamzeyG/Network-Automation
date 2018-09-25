@@ -2,8 +2,29 @@
 Generic SSH script to execute CLI commands on any device that can be accessed over SSH. But networking devices is the priority of this project
 
 # Instalation
+Use the following commands to be able to run my script:
+
+Please use Git.
+First Install git and clone the repository. Accessing the script from git
+ensures you always have the most updated version. Use "git pull" when in the
+project directory to get the latest updates.
+
+This has been tested on WSL (Windows Subsystem for Linux), Arch Linux, Ubuntu Linux:
+```
+sudo apt install git -y
+cd <your_location_you_want_the_project_to_download_to>
+git clone git@github.com:RamzeyG/Network-Automation.git
+sudo apt install python
+sudo apt install python-pip
+pip install paramiko
+pip install argparse
+pip install pexpect
+```
+Arch Users: use "pacman -S" instead of "apt"
 
 # Usage
+Now that the program is installed, follow this instruction to see how to use it.
+
 ## Log in Credentials
 First you must make a file called "login credentials.txt". In this file you will include the IP address, username, and password on one line for one device. If you wish to write down devices but use them later you can "comment" them output by including a "#" as the first character in the line.
  
@@ -50,7 +71,7 @@ we have multiple options:
     channel-group 66 mode active
     !
     ```
-    IMPORTANT: Make sure you keep the log in credentials in the credentials file the same order as the device commands noted above.
+    IMPORTANT: Make sure you keep the log in credentials in the credentials file the same order as the device commands for this file.
     
    This file is called a kevin file. To run the program using this method, use the following syntax: ```python ssh_automate.py -kfile <file_name>```
  
