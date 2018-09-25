@@ -1,6 +1,9 @@
 import paramiko
 import time
 import argparse
+
+from printer import *
+
 # Remove bad chars
 import re
 
@@ -32,48 +35,6 @@ os = args.operatingsystem
 kevin_flag = False
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
-
-def print_progress(line):
-	title = 'About to execute command: ' + line.strip()
-	top_bar = '           '
-
-	for z in range(0, len(title), 1):
-		top_bar += '_'
-	print top_bar
-
-	curr_cmd = '__________|About to execute command: ' + line.strip() + '|__________'
-	print curr_cmd
-
-	empty_line = '|'
-	for y in range(0, len(curr_cmd) - 1, 1):
-		empty_line += ' '
-	empty_line += '|'
-	print empty_line
-
-	return curr_cmd
-
-
-def print_cmd_completion_status(curr_cmd, output):
-	success_string = '| command status: successful'
-	invalid_string = '| command status: invalid/incomplete'
-	if 'Invalid input' in output or 'Incomplete command' in output:
-		for u in range(0, len(curr_cmd) - len(invalid_string), 1):
-			invalid_string += ' '
-		invalid_string += '|'
-		print invalid_string
-	else:
-		for u in range(0, len(curr_cmd) - len(success_string), 1):
-			success_string += ' '
-		success_string += '|'
-		print success_string
-
-	end_line = '|'
-	for x in range(0, len(curr_cmd) - 1, 1):
-		end_line += '_'
-	end_line += '|\n\n\n'
-	print end_line
-
 
 
 config_mode = {
@@ -175,11 +136,19 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 				else:
 					rcv_timeout -= interval_length
 				if rcv_timeout < 0:
-					print 'FIRST RUN IS: ', first_run
+
+					# print 'FIRST RUN IS: ', first_run
 					if first_run:
-						print 'ABOUT TO GET PROMPT'
-						hostname = ssh_remote.recv(1024)
-						print hostname
+
+						# check if there's one more buffer to pull. If so,
+						# it is the hostname
+						if ssh_remote.recv_ready():
+							hostname = ssh_remote.recv(1024)
+						# Otherwise, hostname is the last line in
+						# the output
+						else:
+							temp = new_output.split('\n')
+							hostname = temp[len(temp)-1]
 						if '# ' in hostname:
 							rm_prompt = hostname.split('#')
 							hostname = rm_prompt[0]
@@ -188,19 +157,34 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 							rm_prompt = hostname.split('>')
 							hostname = rm_prompt[0]
 							hostname_found = True
+						elif '$ ' in hostname:
+							rm_prompt = hostname.split('$')
+							hostname = rm_prompt[0]
+							hostname_found = True
+							print 'here!'
+
 						# Look for" hostname(currentmode)"
 						if '(' in hostname:
 							rm_parenthesis = hostname.split('(')
 							hostname = rm_parenthesis[0]
+
 						# Look for username@hostname
 						if '@' in hostname:
 							rm_user = hostname.split('@')
 							hostname = rm_user[1]
-
+							hostname = hostname.strip('~')
+							hostname = hostname.strip(':')
+							hostname = hostname.strip()
+							print hostname
+						# on linux machines: for "hostname:directory"
+						elif ':' in hostname:
+							rm_user = hostname.split(':')
+							hostname = rm_user[0]
+							print 'IN ELSE'
 						if hostname_found:
 							new_file += '-' + hostname + '.txt'
+							print 'NOW OPENING OUTPUT FILE'
 							result = open(new_file, 'w')
-							first_run = False
 						if not hostname_found:
 							print 'DID NOT FIND HOSTNAME, exiting program'
 							exit()
