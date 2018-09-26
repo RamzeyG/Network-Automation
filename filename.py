@@ -13,7 +13,6 @@ def get_final_hostname(hostname, hostname_found, new_file):
         rm_prompt = hostname.split('$')
         hostname = rm_prompt[0]
         hostname_found = True
-        print 'here!'
 
     # Look for" hostname(currentmode)"
     if '(' in hostname:

@@ -2,15 +2,18 @@ import paramiko
 import time
 import argparse
 
-from printer import *
-
 # Remove bad chars
 import re
 
-# from printer import *
-
 # used for running os commands
 import pexpect
+
+# Import my helper functions
+from printer import *
+from filename import *
+from errorcheck import *
+from devicetype import *
+
 
 #              ssh_automate.py
 # This is a simple program that ssh's into Networking devices and
@@ -36,15 +39,6 @@ kevin_flag = False
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-
-config_mode = {
-		# Works for arista EOS!
-        'cisco': 'en\nconf t\nterm len 0',
-		'arista': 'en\nconf t\nterm len 0',
-        'juniper': 'cli\nconfigure\nset cli screen-length 0'
-
-    }
-
 conf = config_mode.get(os)
 
 
@@ -68,7 +62,7 @@ def readFile(fileName):
 # enable, conf t, terminal len 0
 def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_name):
 	if kevin_flag:
-		print 'Kevin flag is on'
+		# print 'Kevin flag is on'
 		global begin_found
 		global start
 		# start = 0
@@ -89,7 +83,7 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 		command_list.close()
 		start += 1
 		begin_found = -1
-	print 'AFTER: ', 	begin_found, start
+	# print 'AFTER: ', 	begin_found, start
 	new_file = 'output-' + device_name # + '.txt'
 	# result = open(new_file, 'w')
 	command_list = open(ip_commands, 'r')
@@ -118,7 +112,6 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 			else:
 				time.sleep(1)
 
-
 			# Continue to read from buffer until output is done.
 			rcv_timeout = 6
 			interval_length = 1
@@ -140,54 +133,17 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 					# print 'FIRST RUN IS: ', first_run
 					if first_run:
 
-						# check if there's one more buffer to pull. If so,
-						# it is the hostname
+						# check if there's one more buffer to pull. If so, it is the hostname
 						if ssh_remote.recv_ready():
 							hostname = ssh_remote.recv(1024)
-						# Otherwise, hostname is the last line in
-						# the output
+
+						# Otherwise, hostname is the last line in the output
 						else:
 							temp = new_output.split('\n')
 							hostname = temp[len(temp)-1]
-						if '# ' in hostname:
-							rm_prompt = hostname.split('#')
-							hostname = rm_prompt[0]
-							hostname_found = True
-						elif '> ' in hostname:
-							rm_prompt = hostname.split('>')
-							hostname = rm_prompt[0]
-							hostname_found = True
-						elif '$ ' in hostname:
-							rm_prompt = hostname.split('$')
-							hostname = rm_prompt[0]
-							hostname_found = True
-							print 'here!'
 
-						# Look for" hostname(currentmode)"
-						if '(' in hostname:
-							rm_parenthesis = hostname.split('(')
-							hostname = rm_parenthesis[0]
-
-						# Look for username@hostname
-						if '@' in hostname:
-							rm_user = hostname.split('@')
-							hostname = rm_user[1]
-							hostname = hostname.strip('~')
-							hostname = hostname.strip(':')
-							hostname = hostname.strip()
-							print hostname
-						# on linux machines: for "hostname:directory"
-						elif ':' in hostname:
-							rm_user = hostname.split(':')
-							hostname = rm_user[0]
-							print 'IN ELSE'
-						if hostname_found:
-							new_file += '-' + hostname + '.txt'
-							print 'NOW OPENING OUTPUT FILE'
-							result = open(new_file, 'w')
-						if not hostname_found:
-							print 'DID NOT FIND HOSTNAME, exiting program'
-							exit()
+						# Grab new file name, and append to file name (result)
+						new_file, result = get_final_hostname(hostname, hostname_found, new_file)
 						first_run = False
 					break
 
@@ -201,21 +157,27 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 
 # Main()
 
-#Read in file for address, username and password
+# Read in file for address, username and password
 numOfDevices, deviceList = readFile("log in credentials.txt")
+
+
+# Establish Global vars
 global begin_found
 global start
 start = 0  # 0
 begin_found = -1  # -1
+
+# check if we have a kevin_file
 if kevin_file:
 	kevin_flag = True
-	print 'KEVIN FILE'
+
+# List of output file names
 output_files_list = []
 
 
 for i in range(numOfDevices):
 	print "********** Now Going into device: ", deviceList[i][0], " ************"
-	print begin_found, start
+	# print begin_found, start
 	ssh.connect(deviceList[i][0], port=22, username=deviceList[i][1], password=deviceList[i][2], look_for_keys=False)
 
 	ssh_remote = ssh.invoke_shell()
@@ -228,21 +190,5 @@ for i in range(numOfDevices):
 	ssh.close()
 
 	output_files_list.append(output_file)
-
-print '\n\n            Checking for errors'
-
-# Check for errors or invalid input
-for z in range(0, len(output_files_list), 1):
-	title = output_files_list[i].strip('output-')
-	title = title.strip('.txt')
-
-	print 'Device ' + title + ' Errors'
-	# Palo alto key word is "Unknown command:"
-	# Arista and Cisco key word is: "Invalid"
-	cmd = 'cat ' + output_files_list[i] + ' | grep -B 2 Invalid'
-	print cmd
-	process = pexpect.spawn('/bin/bash')
-	process.sendline(cmd)
-
-	print process.before
-	process.interact()
+device_brand = 'arista'
+error_check(device_brand, output_files_list)
