@@ -23,7 +23,12 @@ pip install pexpect
 Arch Users: use "pacman -S" instead of "apt"
 
 # Usage
-Now that the program is installed, follow this instruction to see how to use it.
+Now that the program is installed, follow this instruction to see how to use it. These instructions assumes the current working directory is the dircetory that was downloaded in the Installation process.
+
+Always download updates to the program:
+```
+git pull
+```
 
 ## Log in Credentials
 First you must make a file called "login credentials.txt". In this file you will include the IP address, username, and password on one line for one device. If you wish to write down devices but use them later you can "comment" them output by including a "#" as the first character in the line.
