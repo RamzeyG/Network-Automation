@@ -29,3 +29,12 @@ def error_check(device_brand, output_files_list):
             print process.before
         # process.interact()
         print '\n\n'
+
+
+def check_device_brand_compatability(device_brand):
+    if device_brand not in invalid_cmd_key:
+        print "Device brand: " + device_brand +" is misspelled or not compatable"
+        print "\nCompatable brands include: "
+        for key, value in invalid_cmd_key.iteritems():
+            print '   ' + key
+        exit(1)

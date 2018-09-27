@@ -35,18 +35,27 @@ kevin_file = args.kevinfile
 single_file = args.singlefile
 device_brand = args.devicebrand
 
-kevin_flag = False
-ssh = paramiko.SSHClient()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+# Check if device_brand is compatible with this program
+check_device_brand_compatability(device_brand)
 
+# Get config commands based off device brand
 conf = config_mode.get(device_brand)
 
+# kevin flag is off by default
+kevin_flag = False
+
+# create an ssh session
+ssh = paramiko.SSHClient()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
 def readFile(fileName):
 	deviceList =[]
 	numOfDevices = 0
 	readfile = open("log in credentials.txt", "r")
 	for line in readfile:
+		# Remove leading and trailing spaces
+		line = line.strip()
+
 		# Skip commented out and blank lines (\n) which have a len of 2
 		if not line.startswith('#') and not line.startswith('//') and len(line) > 2:
 			line = line.strip("\r\n")
@@ -54,8 +63,6 @@ def readFile(fileName):
 			deviceList.append([line[0], line[1], line[2]])
 			numOfDevices += 1
 	return numOfDevices, deviceList
-
-
 
 
 # DEFUALT COMMANDS I NEED TO IMPLEMENT:
@@ -87,17 +94,19 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 	new_file = 'output-' + device_name # + '.txt'
 	# result = open(new_file, 'w')
 	command_list = open(ip_commands, 'r')
-	config_cmds = conf.split('\n')
+
 
 	# # Executing config commands
+	# config_cmds = conf.split('\n')
 	# for f in range(0,len(config_cmds), 1):
 	# 	curr_cmd = print_progress(config_cmds[f])
 	# 	ssh_remote.send(config_cmds[f])
 	# 	time.sleep(3)
 	# 	output = ssh_remote.recv(655350)
 	# 	print_cmd_completion_status(curr_cmd, output)
-	hostname = ''
+
 	first_run = 1
+
 	# executing user commands
 	for line in command_list:
 
