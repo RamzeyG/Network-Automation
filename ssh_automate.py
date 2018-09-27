@@ -28,18 +28,18 @@ from devicetype import *
 parser = argparse.ArgumentParser()
 parser.add_argument('-kfile', '--kevinfile')
 parser.add_argument('-sf', '--singlefile')
-parser.add_argument('-os', '--operatingsystem', default='cisco')
+parser.add_argument('-b', '--devicebrand', default='cisco')
 
 args = parser.parse_args()
 kevin_file = args.kevinfile
 single_file = args.singlefile
-os = args.operatingsystem
+device_brand = args.devicebrand
 
 kevin_flag = False
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-conf = config_mode.get(os)
+conf = config_mode.get(device_brand)
 
 
 def readFile(fileName):
@@ -136,6 +136,7 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 						# check if there's one more buffer to pull. If so, it is the hostname
 						if ssh_remote.recv_ready():
 							hostname = ssh_remote.recv(1024)
+							print 'GOT SOMETHING'
 
 						# Otherwise, hostname is the last line in the output
 						else:
@@ -190,5 +191,5 @@ for i in range(numOfDevices):
 	ssh.close()
 
 	output_files_list.append(output_file)
-device_brand = 'arista'
+
 error_check(device_brand, output_files_list)

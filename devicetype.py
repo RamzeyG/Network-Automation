@@ -13,10 +13,11 @@ config_mode = {
 }
 
 # keys used to look for "wrong command"
+# Note, multi word keys need quotes around them
 invalid_cmd_key = {
 	'cisco': 'Invalid',
 	'arista': 'Invalid',
 	'juniper': '',
-	'pan': 'Unknown command:',
-	'ubuntu': 'not found'
+	'pan': '"Unknown command:"',
+	'ubuntu': '"not found"'
 }

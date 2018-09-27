@@ -1,6 +1,7 @@
 # used for running os commands
 import pexpect
 import time
+from devicetype import *
 
 def error_check(device_brand, output_files_list):
 
@@ -12,10 +13,13 @@ def error_check(device_brand, output_files_list):
         title = title.strip('.txt')
 
         print ' ', z+1, ') Device ' + title
-        # Palo alto key word is "Unknown command:"
-        # Arista and Cisco key word is: "Invalid"
-        cmd = 'cat ' + output_files_list[z] + ' | grep -B 2 Invalid'
-        # print cmd
+
+        # DELETE ME:
+        if 'juniper' in device_brand:
+            print 'ERROR: I DON"T HAVE THE RIGHT unknown cmd yet'
+        cmd = 'cat ' + output_files_list[z] + ' | grep -B 2 ' +\
+              invalid_cmd_key.get(device_brand)
+        print cmd
         process = pexpect.spawn('/bin/bash')
         process.sendline(cmd)
 
