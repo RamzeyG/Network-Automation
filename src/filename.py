@@ -1,6 +1,6 @@
 
 def get_final_hostname(hostname, hostname_found, new_file):
-
+    print hostname
     if '# ' in hostname:
         rm_prompt = hostname.split('#')
         hostname = rm_prompt[0]

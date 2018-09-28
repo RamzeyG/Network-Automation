@@ -68,36 +68,14 @@ def readFile(fileName):
 # DEFUALT COMMANDS I NEED TO IMPLEMENT:
 # enable, conf t, terminal len 0
 def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_name):
-	if kevin_flag:
-		# print 'Kevin flag is on'
-		global begin_found
-		global start
-		# start = 0
+	global begin_found
+	global start
+	begin_found, start = check_kevin_file(k_file_name, kevin_flag, ip_commands, begin_found, start)
 
-		# print begin_found
-		command_list = open(ip_commands, 'w')
-		kevin_file = open(k_file_name, 'r')
-
-		for line in kevin_file:
-			while begin_found <= start:
-				if line.startswith('######') and 'BEGIN CONFIG' in line:
-					begin_found += 1
-				elif begin_found == start:
-					command_list.write(line.strip() + '\n')
-					print 'Writing the following cmd: [' + line.strip()+']'
-
-				line = kevin_file.next()
-		command_list.close()
-		start += 1
-		begin_found = -1
-	# print 'AFTER: ', 	begin_found, start
-	new_file = 'output-' + device_name # + '.txt'
-	# result = open(new_file, 'w')
+	new_file = 'output-' + device_name
 
 	# Write extra new line (fixes a lot of ouput issues)
-	command_list = open(ip_commands, 'a+')
-	command_list.write('\n')
-	command_list.close()
+	add_extra_line(ip_commands)
 
 	# Start executing commands
 	command_list = open(ip_commands, 'r')
@@ -111,6 +89,8 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 	# 	print_cmd_completion_status(curr_cmd, output)
 
 	first_run = 1
+	# Inital sleep to wait for banner to come in
+	time.sleep(3)
 	# executing user commands
 	for line in command_list:
 		if 'show' in line:
@@ -145,10 +125,19 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 					rcv_timeout -= interval_length
 
 				if rcv_timeout < 0:
+					if ssh_remote.recv_ready():
+						new_output += ssh_remote.recv(1024)
+						print "GOT SOMETHING"
 					if first_run:
-						# Otherwise, hostname is the last line in the output
+						hostname =''
 						temp = new_output.split('\n')
-						hostname = temp[len(temp)-1]
+						itterator = len(temp) - 1
+
+						hostname = temp[itterator]
+						# while itterator >= 0 and len(hostname) == 0:
+						# 	# Otherwise, hostname is the last line in the output
+						# 	hostname = temp[itterator]
+						# 	itterator -= 1
 
 						# Grab new file name, and append to file name (result)
 						new_file, result = get_final_hostname(hostname, hostname_found, new_file)
@@ -158,7 +147,6 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 			print_cmd_completion_status(curr_cmd, new_output)
 			# Write output to the output file
 			result.write(new_output)
-			result.write('\n')
 	result.close()
 	command_list.close()
 	remove_extra_line(ip_commands)
@@ -174,8 +162,8 @@ numOfDevices, deviceList = readFile("log in credentials.txt")
 # Establish Global vars
 global begin_found
 global start
-start = 0  # 0
-begin_found = -1  # -1
+start = 1  # 1
+begin_found = 0  # 0
 
 # check if we have a kevin_file
 if kevin_file:
@@ -198,6 +186,8 @@ for i in range(numOfDevices):
 		output_file = execute_commands(deviceList[i][0], ssh_remote, deviceList[i][0], kevin_flag, kevin_file)
 	
 	ssh.close()
+
+	begin_found += 1
 
 	output_files_list.append(output_file)
 
