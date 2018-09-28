@@ -13,7 +13,7 @@ from printer import *
 from filename import *
 from errorcheck import *
 from devicetype import *
-
+from helper_func import *
 
 #              ssh_automate.py
 # This is a simple program that ssh's into Networking devices and
@@ -84,7 +84,7 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 					begin_found += 1
 				elif begin_found == start:
 					command_list.write(line.strip() + '\n')
-					print 'Writing the following cmd: ['+ line.strip()+']'
+					print 'Writing the following cmd: [' + line.strip()+']'
 
 				line = kevin_file.next()
 		command_list.close()
@@ -93,9 +93,14 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 	# print 'AFTER: ', 	begin_found, start
 	new_file = 'output-' + device_name # + '.txt'
 	# result = open(new_file, 'w')
+
+	# Write extra new line (fixes a lot of ouput issues)
+	command_list = open(ip_commands, 'a+')
+	command_list.write('\n')
+	command_list.close()
+
+	# Start executing commands
 	command_list = open(ip_commands, 'r')
-
-
 	# # Executing config commands
 	# config_cmds = conf.split('\n')
 	# for f in range(0,len(config_cmds), 1):
@@ -106,62 +111,57 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 	# 	print_cmd_completion_status(curr_cmd, output)
 
 	first_run = 1
-
 	# executing user commands
 	for line in command_list:
-
+		if 'show' in line:
+			sleep_time = 5
+		else:
+			sleep_time = 1
 		cmd = line.strip()
 		if len(cmd) > 0 and '!' != cmd:
 			curr_cmd = print_progress(line)
-
+			# print 'cur cmd, len is ', curr_cmd, len(curr_cmd)
 			# Now we can execute commands
 			ssh_remote.send(line.lstrip())
-			if 'show' in line:
-				time.sleep(5)
-			else:
-				time.sleep(1)
+
+			time.sleep(sleep_time)
 
 			# Continue to read from buffer until output is done.
 			rcv_timeout = 6
 			interval_length = 1
 			hostname_found = False
 			new_output = ''
+
 			while True:
 				if ssh_remote.recv_ready():
 					output = ssh_remote.recv(1024)
-
-					# Remove unwanted chars
-					for x in output:
-						new_output += (re.compile(r'\x1b[^m]*m')).sub('', x)
+					# # Remove unwanted chars
+					# for x in output:
+					# 	new_output += (re.compile(r'\x1b[^m]*m')).sub('', x)
+					new_output += output
 
 				# If recv buffer is empty (we got all the output)
 				else:
 					rcv_timeout -= interval_length
+
 				if rcv_timeout < 0:
-
-					# print 'FIRST RUN IS: ', first_run
 					if first_run:
-
-						# check if there's one more buffer to pull. If so, it is the hostname
-						if ssh_remote.recv_ready():
-							hostname = ssh_remote.recv(1024)
-							print 'GOT SOMETHING'
-
 						# Otherwise, hostname is the last line in the output
-						else:
-							temp = new_output.split('\n')
-							hostname = temp[len(temp)-1]
+						temp = new_output.split('\n')
+						hostname = temp[len(temp)-1]
 
 						# Grab new file name, and append to file name (result)
 						new_file, result = get_final_hostname(hostname, hostname_found, new_file)
 						first_run = False
 					break
 
-			print_cmd_completion_status(curr_cmd, output)
+			print_cmd_completion_status(curr_cmd, new_output)
 			# Write output to the output file
 			result.write(new_output)
 			result.write('\n')
 	result.close()
+	command_list.close()
+	remove_extra_line(ip_commands)
 	return new_file
 
 
