@@ -10,7 +10,6 @@ import pexpect
 
 # Import my helper functions
 from printer import *
-from filename import *
 from errorcheck import *
 from devicetype import *
 from helper_func import *
@@ -106,43 +105,8 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 
 			time.sleep(sleep_time)
 
-			# Continue to read from buffer until output is done.
-			rcv_timeout = 6
-			interval_length = 1
-			hostname_found = False
-			new_output = ''
-
-			while True:
-				if ssh_remote.recv_ready():
-					output = ssh_remote.recv(1024)
-					# # Remove unwanted chars
-					# for x in output:
-					# 	new_output += (re.compile(r'\x1b[^m]*m')).sub('', x)
-					new_output += output
-
-				# If recv buffer is empty (we got all the output)
-				else:
-					rcv_timeout -= interval_length
-
-				if rcv_timeout < 0:
-					if ssh_remote.recv_ready():
-						new_output += ssh_remote.recv(1024)
-						print "GOT SOMETHING"
-					if first_run:
-						hostname =''
-						temp = new_output.split('\n')
-						itterator = len(temp) - 1
-
-						hostname = temp[itterator]
-						# while itterator >= 0 and len(hostname) == 0:
-						# 	# Otherwise, hostname is the last line in the output
-						# 	hostname = temp[itterator]
-						# 	itterator -= 1
-
-						# Grab new file name, and append to file name (result)
-						new_file, result = get_final_hostname(hostname, hostname_found, new_file)
-						first_run = False
-					break
+			# Get ssh response.
+			new_output, result, new_file, first_run = get_ssh_response(ssh_remote, first_run, new_file)
 
 			print_cmd_completion_status(curr_cmd, new_output)
 			# Write output to the output file
