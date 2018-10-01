@@ -23,7 +23,9 @@ pip install pexpect
 Arch Users: use "pacman -S" instead of "apt"
 
 # Usage
-Now that the program is installed, follow this instruction to see how to use it. These instructions assumes the current working directory is the dircetory that was downloaded in the Installation process.
+Now that the program is installed, follow this instruction to see how to use it. These instructions assumes the current working directory is the dircetory that was downloaded in the Installation process. 
+
+Please note: All required files must be in the ```src/``` folder of the project.
 
 Always download updates to the program:
 ```
@@ -40,7 +42,6 @@ First you must make a file called "login credentials.txt". In this file you will
  ```
  
  ## Writing commands to be executed
- IMPORTANT: When making your commands, ensure to include an extra line with "!" at the end of the file. Otherwise you won't receive the proper output. A fix is currently being worked on.
  
  Next, We need to configure the commands you want to run on the device(s). To do this,
 we have multiple options:
@@ -80,4 +81,39 @@ we have multiple options:
     
    This file is called a kevin file. To run the program using this method, use the following syntax: ```python ssh_automate.py -kfile <file_name>```
  
+ ## Different Manufacturers
+ With different variations of running the program here's, you should always specify the device brand, so the script run for that particular brand. Use the brand argument: ```-b``` when running the script. Currently, the follwing brand arguments are supported:
  
+ Brand  | Brand Argument
+------------- | -------------
+Cisco  | ```-b cisco```
+Juniper  | ```-b juniper```
+Palo Alto Networks | ```-b pan```
+Ubuntu | ```-b ubuntu```
+
+
+# Running the Program
+Now that you know how to use the program, now we can run it. This section describes how to run the program for each usage case:
+### Normal Usage (One file -> One device)
+In normal usage, we have 1 configuration file per device where the file name is the IP address with no extension and the log in credentials are in the "log in credentials.txt" file. Run the program with the command:
+```
+python ssh_automate.py -b <brand>
+```
+
+### Single File (One file -> Many devices)
+In single file usage, we have a single file of commands that are executed on all devices in "login credentials.txt". Run the program with the following command:
+```
+python ssh_automate.py -sf <single file> -b <brand>
+```
+
+### Kevin File (One file (with different commands per device) -> Many)
+In a kevin file, commands for each device are seperated with the ```############# BEGIN CONFIGURATION FOR <device name> ###########``` line. The order of commands needs to match the order of the devices listed in "login credentials.txt". Run the program with the following command:
+```
+python ssh_automate -kfile <file name> -b <brand>
+```
+
+### Help
+If you need to see all these options, run the help command:
+```
+python ssh_automate.py -h
+```
