@@ -1,7 +1,9 @@
 
 from filename import *
 
-
+#        get_ssh_response()
+#
+# Gets the response form the remote device
 def get_ssh_response(ssh_remote, first_run, new_file):
     rcv_timeout = 6
     interval_length = 1
@@ -35,10 +37,11 @@ def get_ssh_response(ssh_remote, first_run, new_file):
 
                 # Grab new file name, and append to file name (result)
                 new_file, result = get_final_hostname(hostname, hostname_found, new_file)
-                first_run = False
+            else:
+                result = 'temp'
             break
 
-    return new_output, result, new_file, first_run
+    return new_output, result, new_file
 
 
 
@@ -54,6 +57,7 @@ def get_ssh_response(ssh_remote, first_run, new_file):
 # @param:
 def check_kevin_file(k_file_name, kevin_flag, ip_commands, begin_found, start):
     if kevin_flag:
+        print 'KEVIN FLAG IS HERE'
         print begin_found, start
         command_list = open(ip_commands, 'w')
         kevin_file = open(k_file_name, 'r')
@@ -64,7 +68,7 @@ def check_kevin_file(k_file_name, kevin_flag, ip_commands, begin_found, start):
                     begin_found += 1
                 elif begin_found == start:
                     command_list.write(line.strip() + '\n')
-                    print 'Writing the following cmd: [' + line.strip() + ']'
+                    # print 'Writing the following cmd: [' + line.strip() + ']'
 
                 line = kevin_file.next()
         command_list.close()
@@ -73,7 +77,7 @@ def check_kevin_file(k_file_name, kevin_flag, ip_commands, begin_found, start):
         kevin_file.close()
         # print 'I AM EXITING', begin_found, start
         # exit()
-        return begin_found, start
+    return begin_found, start
 
 
 

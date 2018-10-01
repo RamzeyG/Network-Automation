@@ -50,7 +50,7 @@ ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 def readFile(fileName):
 	deviceList =[]
 	numOfDevices = 0
-	readfile = open("log in credentials.txt", "r")
+	readfile = open(fileName, "r")
 	for line in readfile:
 		# Remove leading and trailing spaces
 		line = line.strip()
@@ -69,6 +69,7 @@ def readFile(fileName):
 def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_name):
 	global begin_found
 	global start
+
 	begin_found, start = check_kevin_file(k_file_name, kevin_flag, ip_commands, begin_found, start)
 
 	new_file = 'output-' + device_name
@@ -88,7 +89,7 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 	# 	print_cmd_completion_status(curr_cmd, output)
 
 	first_run = 1
-	# Inital sleep to wait for banner to come in
+	# Initial sleep to wait for banner to come in
 	time.sleep(3)
 	# executing user commands
 	for line in command_list:
@@ -106,12 +107,15 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 			time.sleep(sleep_time)
 
 			# Get ssh response.
-			new_output, result, new_file, first_run = get_ssh_response(ssh_remote, first_run, new_file)
-
+			new_output, result, new_file = get_ssh_response(ssh_remote, first_run, new_file)
+			if first_run:
+				final_result = result
+				first_run = False
 			print_cmd_completion_status(curr_cmd, new_output)
+
 			# Write output to the output file
-			result.write(new_output)
-	result.close()
+			final_result.write(new_output)
+	final_result.close()
 	command_list.close()
 	remove_extra_line(ip_commands)
 	return new_file
@@ -120,7 +124,7 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 # Main()
 
 # Read in file for address, username and password
-numOfDevices, deviceList = readFile("log in credentials.txt")
+numOfDevices, deviceList = readFile("log-in-credentials.txt")
 
 
 # Establish Global vars
