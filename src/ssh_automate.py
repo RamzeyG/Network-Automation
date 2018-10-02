@@ -1,6 +1,7 @@
 import paramiko
 import time
 import argparse
+import numpy as np
 
 # Remove bad chars
 import re
@@ -50,7 +51,12 @@ ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 def readFile(fileName):
 	deviceList =[]
 	numOfDevices = 0
-	readfile = open(fileName, "r")
+
+	# Check if file exists in THIS directory or src/ directory
+	if np.DataSource().exists(fileName):
+		readfile = open(fileName, "r")
+	else:
+		readfile = open('src/'+fileName, "r")
 	for line in readfile:
 		# Remove leading and trailing spaces
 		line = line.strip()
@@ -108,10 +114,13 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 
 			# Get ssh response.
 			new_output, result, new_file = get_ssh_response(ssh_remote, first_run, new_file)
+
 			if first_run:
 				final_result = result
 				first_run = False
-			print_cmd_completion_status(curr_cmd, new_output)
+
+			# Print completion status to terminal
+			print_cmd_completion_status(curr_cmd, new_output, invalid_cmd_key.get(device_brand))
 
 			# Write output to the output file
 			final_result.write(new_output)
@@ -140,7 +149,7 @@ if kevin_file:
 # List of output file names
 output_files_list = []
 
-
+# Iterate thorough all devices and execute commands
 for i in range(numOfDevices):
 	print "********** Now Going into device: ", deviceList[i][0], " ************"
 	# print begin_found, start
@@ -159,4 +168,6 @@ for i in range(numOfDevices):
 
 	output_files_list.append(output_file)
 
+
+# When complete, check all output files for errors
 error_check(device_brand, output_files_list)

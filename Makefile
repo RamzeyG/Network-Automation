@@ -7,7 +7,6 @@ COMMIT := $(shell git rev-parse HEAD)
 
 SRC = src/ssh_automate.py
 
-SF = src/$(sf)
 
 all: ${SRC}
 
@@ -27,8 +26,8 @@ pan: ${SRC}
 
 # PAN Single file
 
-pan sf: src/${SRC}
-	python ${SRC} -sf ${SF} -b pan
+pan sf: ${SRC}
+	python ${SRC} -sf $(sf) -b pan
 
 # Ubuntu
 ubuntu: ${SRC}
@@ -37,14 +36,14 @@ ubuntu: ${SRC}
 
 # Ubuntu
 ubuntu sf: ${SRC}
-	python ${SRC} -b ubuntu -sf ${SF}
+	python ${SRC} -b ubuntu -sf $(sf)
 
 
 
 
 # Cisco sf
 cisco sf: ${SRC}
-	python ${SRC} -b cisco -sf ${SF}
+	python ${SRC} -b cisco -sf $(sf)
 
 
 

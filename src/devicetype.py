@@ -12,6 +12,8 @@ config_mode = {
 		'pan': 'configure\nset cli pager off'
 }
 
+
+
 # keys used to look for "wrong command"
 # Note, multi word keys need quotes around them
 invalid_cmd_key = {

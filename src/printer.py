@@ -18,10 +18,10 @@ def print_progress(line):
 	return curr_cmd
 
 
-def print_cmd_completion_status(curr_cmd, output):
+def print_cmd_completion_status(curr_cmd, output, invald_key):
 	success_string = '| command status: successful'
 	invalid_string = '| command status: invalid/incomplete'
-	if 'Invalid input' in output or 'Incomplete command' in output:
+	if invald_key in output or 'Incomplete command' in output:
 		for u in range(0, len(curr_cmd) - len(invalid_string), 1):
 			invalid_string += ' '
 		invalid_string += '|'
