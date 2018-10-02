@@ -16,9 +16,10 @@ cd <your_location_you_want_the_project_to_download_to>
 git clone git@github.com:RamzeyG/Network-Automation.git
 sudo apt install python
 sudo apt install python-pip
-pip install paramiko
-pip install argparse
-pip install pexpect
+sudo pip install paramiko
+sudo pip install argparse
+sudo pip install pexpect
+sudo pip install numpy
 ```
 Arch Users: use "pacman -S" instead of "apt"
 
