@@ -3,6 +3,7 @@ import pexpect
 import time
 from devicetype import *
 
+
 def error_check(device_brand, output_files_list):
 
     print '\n\n            Checking for errors\n'

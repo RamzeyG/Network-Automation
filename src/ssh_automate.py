@@ -48,6 +48,15 @@ kevin_flag = False
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
+#         readFile()
+#
+# This function parses a file for all devices
+# we are going to ssh to.
+#
+# @param: fileName - file that contains the device list
+#
+# @return: numOfDevices - totalnumber of devices found
+# @return: deviceList - a list of devices address, login name, password
 def readFile(fileName):
 	deviceList =[]
 	numOfDevices = 0
@@ -70,8 +79,18 @@ def readFile(fileName):
 	return numOfDevices, deviceList
 
 
-# DEFUALT COMMANDS I NEED TO IMPLEMENT:
-# enable, conf t, terminal len 0
+#            execute_commands()
+#
+# This function executes all the commands in a given ip_commands file on the ssh session.
+# The session is logged to a new_file named "output-<ip address>-<hostname>.txt"
+# this name is the variable new_file.
+#
+# @param: ip_commands - file that contains all the commands to be executed on THIS device
+# @param: ssh_remote - ssh session we are using for THIS device
+# @param: kevin_flag - flag that determines weather or not we are using a "kevin file"
+# @param: k_file_name - If we have a kevin file, the name of the file is this variable
+#
+# @return: new_file - the name of the file that we save the output to.
 def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_name):
 	global begin_found
 	global start
@@ -115,13 +134,14 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 		if 'show' in line:
 			sleep_time = 5
 		else:
-			sleep_time = 1
+			sleep_time = 5
 		cmd = line.strip()
 		if len(cmd) > 0 and '!' != cmd:
 			curr_cmd = print_progress(line)
 			# print 'cur cmd, len is ', curr_cmd, len(curr_cmd)
 			# Now we can execute commands
-			ssh_remote.send(line.lstrip())
+
+			ssh_remote.send(line.lstrip() + '\n\n')
 
 			time.sleep(sleep_time)
 
@@ -142,14 +162,15 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 	remove_extra_line(ip_commands)
 	return new_file
 
+#------------------------------------------------------------------------------------------------
+#                      Main()
+# Main program starts here
 
-# Main()
 
 # Read in file for address, username and password
 numOfDevices, deviceList = readFile("log-in-credentials.txt")
 
-
-# Establish Global vars
+# Establish Global vars (used for kevin file)
 global begin_found
 global start
 start = 1  # 1

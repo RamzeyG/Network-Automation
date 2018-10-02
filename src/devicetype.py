@@ -16,6 +16,7 @@ config_mode = {
 
 # keys used to look for "wrong command"
 # Note, multi word keys need quotes around them
+# aditional cmds: pan: Invalid syntax.
 invalid_cmd_key = {
 	'cisco': 'Invalid',
 	'arista': 'Invalid',
