@@ -10,39 +10,46 @@ SRC = src/ssh_automate.py
 
 all: ${SRC}
 
+ifndef
 run: ${SRC}
 	python ${SRC}
+endif
 
 # Juniper program
+ifndef SF
 juniper: ${SRC}
 	python ${SRC} -b juniper
+endif
 
-juniper sf: ${SRC}
+junipersf: ${SRC}
 	python ${SRC} -sf ${SF} -b juniper
 
 # PAN
+ifndef SF
 pan: ${SRC}
 	python ${SRC} -b pan
+endif
 
 # PAN Single file
 
-pan sf: ${SRC}
+pansf: ${SRC}
 	python ${SRC} -sf $(sf) -b pan
 
 # Ubuntu
+ifndef SF
 ubuntu: ${SRC}
 	python ${SRC} -b ubuntu
-
+endif
 
 # Ubuntu
-ubuntu sf: ${SRC}
+ubuntusf: ${SRC}
 	python ${SRC} -b ubuntu -sf $(sf)
 
 
 
 
 # Cisco sf
-cisco sf: ${SRC}
+ciscosf: ${SRC}
 	python ${SRC} -b cisco -sf $(sf)
 
 
