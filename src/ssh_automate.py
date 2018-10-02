@@ -84,20 +84,33 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 	add_extra_line(ip_commands)
 
 	# Start executing commands
-	command_list = open(ip_commands, 'r')
-	# # Executing config commands
-	# config_cmds = conf.split('\n')
-	# for f in range(0,len(config_cmds), 1):
-	# 	curr_cmd = print_progress(config_cmds[f])
-	# 	ssh_remote.send(config_cmds[f])
-	# 	time.sleep(3)
-	# 	output = ssh_remote.recv(655350)
-	# 	print_cmd_completion_status(curr_cmd, output)
+	# Check if file exists in THIS directory or src/ directory
+	if np.DataSource().exists(ip_commands):
+		command_list = open(ip_commands, "r")
+	elif np.DataSource().exists('src/'+ip_commands):
+		command_list = open('src/' + ip_commands, "r")
+	else:
+		print 'Cannot find configuration commands file. Exiting program'
+		exit()
+
+	# Executing config commands
+	config_cmds = conf.split('\n')
+	print config_cmds
+	for f in range(0, len(config_cmds), 1):
+		curr_cmd = print_progress(config_cmds[f])
+
+		ssh_remote.send(config_cmds[f] + '\n')
+
+		time.sleep(3)
+		output = ssh_remote.recv(655350)
+		print output
+		print_cmd_completion_status(curr_cmd, output,  invalid_cmd_key.get(device_brand))
 
 	first_run = 1
 	# Initial sleep to wait for banner to come in
 	time.sleep(3)
 	# executing user commands
+	print command_list
 	for line in command_list:
 		if 'show' in line:
 			sleep_time = 5

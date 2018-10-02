@@ -9,7 +9,7 @@ config_mode = {
 		'cisco': 'en\nconf t\nterm len 0',
 		'arista': 'en\nconf t\nterm len 0',
 		'juniper': 'cli\nconfigure\nset cli screen-length 0',
-		'pan': 'configure\nset cli pager off'
+		'pan': 'set cli pager off\nconfigure'
 }
 
 
