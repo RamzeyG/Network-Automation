@@ -33,7 +33,6 @@ def get_final_hostname(hostname, hostname_found, new_file):
         new_file += '-' + hostname + '.txt'
         result = open(new_file, 'w')
     if not hostname_found:
-        print 'adsfsafssssssss '
         print 'DID NOT FIND HOSTNAME, exiting program'
         print hostname
         exit()

@@ -25,15 +25,7 @@ from helper_func import *
 # can be found in the file "sshSetupCisco.txt" for Cisco devices)
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-kfile', '--kevinfile')
-parser.add_argument('-sf', '--singlefile')
-parser.add_argument('-b', '--devicebrand', default='cisco')
 
-args = parser.parse_args()
-kevin_file = args.kevinfile
-single_file = args.singlefile
-device_brand = args.devicebrand
 
 # Check if device_brand is compatible with this program
 check_device_brand_compatability(device_brand)
@@ -166,42 +158,51 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 #                      Main()
 # Main program starts here
 
+def Main():
+	parser = argparse.ArgumentParser()
+	parser.add_argument('-kfile', '--kevinfile')
+	parser.add_argument('-sf', '--singlefile')
+	parser.add_argument('-b', '--devicebrand', default='cisco')
 
-# Read in file for address, username and password
-numOfDevices, deviceList = readFile("log-in-credentials.txt")
+	args = parser.parse_args()
+	kevin_file = args.kevinfile
+	single_file = args.singlefile
+	device_brand = args.devicebrand
+	# Read in file for address, username and password
+	numOfDevices, deviceList = readFile("log-in-credentials.txt")
 
-# Establish Global vars (used for kevin file)
-global begin_found
-global start
-start = 1  # 1
-begin_found = 0  # 0
+	# Establish Global vars (used for kevin file)
+	global begin_found
+	global start
+	start = 1  # 1
+	begin_found = 0  # 0
 
-# check if we have a kevin_file
-if kevin_file:
-	kevin_flag = True
+	# check if we have a kevin_file
+	if kevin_file:
+		kevin_flag = True
 
-# List of output file names
-output_files_list = []
+	# List of output file names
+	output_files_list = []
 
-# Iterate thorough all devices and execute commands
-for i in range(numOfDevices):
-	print "********** Now Going into device: ", deviceList[i][0], " ************"
-	# print begin_found, start
-	ssh.connect(deviceList[i][0], port=22, username=deviceList[i][1], password=deviceList[i][2], look_for_keys=False)
+	# Iterate thorough all devices and execute commands
+	for i in range(numOfDevices):
+		print "********** Now Going into device: ", deviceList[i][0], " ************"
+		# print begin_found, start
+		ssh.connect(deviceList[i][0], port=22, username=deviceList[i][1], password=deviceList[i][2], look_for_keys=False)
 
-	ssh_remote = ssh.invoke_shell()
+		ssh_remote = ssh.invoke_shell()
 
-	if single_file:
-		output_file = execute_commands(single_file, ssh_remote, deviceList[i][0], kevin_flag, kevin_file)
-	else:
-		output_file = execute_commands(deviceList[i][0], ssh_remote, deviceList[i][0], kevin_flag, kevin_file)
-	
-	ssh.close()
+		if single_file:
+			output_file = execute_commands(single_file, ssh_remote, deviceList[i][0], kevin_flag, kevin_file)
+		else:
+			output_file = execute_commands(deviceList[i][0], ssh_remote, deviceList[i][0], kevin_flag, kevin_file)
 
-	begin_found += 1
+		ssh.close()
 
-	output_files_list.append(output_file)
+		begin_found += 1
+
+		output_files_list.append(output_file)
 
 
-# When complete, check all output files for errors
-error_check(device_brand, output_files_list)
+	# When complete, check all output files for errors
+	error_check(device_brand, output_files_list)
