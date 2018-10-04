@@ -27,18 +27,7 @@ from helper_func import *
 
 
 
-# Check if device_brand is compatible with this program
-check_device_brand_compatability(device_brand)
 
-# Get config commands based off device brand
-conf = config_mode.get(device_brand)
-
-# kevin flag is off by default
-kevin_flag = False
-
-# create an ssh session
-ssh = paramiko.SSHClient()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
 #         readFile()
 #
@@ -81,9 +70,10 @@ def readFile(fileName):
 # @param: ssh_remote - ssh session we are using for THIS device
 # @param: kevin_flag - flag that determines weather or not we are using a "kevin file"
 # @param: k_file_name - If we have a kevin file, the name of the file is this variable
+# @param: conf - commands to enter config mode
 #
 # @return: new_file - the name of the file that we save the output to.
-def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_name):
+def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_name, conf, device_brand):
 	global begin_found
 	global start
 
@@ -158,16 +148,27 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 #                      Main()
 # Main program starts here
 
-def Main():
-	parser = argparse.ArgumentParser()
-	parser.add_argument('-kfile', '--kevinfile')
-	parser.add_argument('-sf', '--singlefile')
-	parser.add_argument('-b', '--devicebrand', default='cisco')
-
-	args = parser.parse_args()
+def Main(args):
 	kevin_file = args.kevinfile
 	single_file = args.singlefile
 	device_brand = args.devicebrand
+
+	# Check if device_brand is compatible with this program
+	check_device_brand_compatability(device_brand)
+
+	# Get config commands based off device brand
+	conf = config_mode.get(device_brand)
+
+	# kevin flag is off by default
+	kevin_flag = False
+
+	# create an ssh session
+	ssh = paramiko.SSHClient()
+	ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+
+
+
 	# Read in file for address, username and password
 	numOfDevices, deviceList = readFile("log-in-credentials.txt")
 
@@ -193,9 +194,9 @@ def Main():
 		ssh_remote = ssh.invoke_shell()
 
 		if single_file:
-			output_file = execute_commands(single_file, ssh_remote, deviceList[i][0], kevin_flag, kevin_file)
+			output_file = execute_commands(single_file, ssh_remote, deviceList[i][0], kevin_flag, kevin_file, conf, device_brand)
 		else:
-			output_file = execute_commands(deviceList[i][0], ssh_remote, deviceList[i][0], kevin_flag, kevin_file)
+			output_file = execute_commands(deviceList[i][0], ssh_remote, deviceList[i][0], kevin_flag, kevin_file, conf, device_brand)
 
 		ssh.close()
 
