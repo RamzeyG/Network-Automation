@@ -99,8 +99,8 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 	print config_cmds
 	for f in range(0, len(config_cmds), 1):
 		curr_cmd = print_progress(config_cmds[f])
-
 		ssh_remote.send(config_cmds[f] + '\n')
+
 
 		time.sleep(3)
 		output = ssh_remote.recv(655350)
@@ -115,6 +115,10 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 	for line in command_list:
 		if 'show' in line:
 			sleep_time = 5
+		elif 'sleep 5' in line:
+			print 'SLEEP FOR % MIN**************'
+			sleep_time = 5 * 60
+			line = command_list.next()
 		else:
 			sleep_time = 5
 		cmd = line.strip()
