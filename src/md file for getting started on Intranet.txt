@@ -1,0 +1,171 @@
+### Table of Contents
+1. [Getting Started](#getting-started)  
+2. [Add Your InterVision Account to GitHub](#add-your-intervision-account-to-github)
+3. [GiHub and SSH Keys](#github-and-ssh-keys)  
+4. [Locating an existing SSH key pair](#locating-an-existing-ssh-key-pair)  
+5. [Add your Git account to your terminal](#add-your-git-account-to-your-terminal)  
+6. [Clone a Repository](#clone-a-repository)  
+7. [Downloading Repository Updates](#downloading-repository-updates)  
+
+# Getting Started
+A tutorial of how to use GitHub with the InterVision Organization.
+
+
+
+# Add Your InterVision Account to GitHub
+To gain access to the InterVision Organization on GitHub, you must do the following:  
+1. First create a GitHub account. Feel free to use your InterVision e-mail or a personal one 
+2. If you use a personal e-mail, you must link your InterVision e-mail with your GitHub account.  
+
+    1. Go into account settings by clicking your account icon at the right corner of the screen:
+    ![alt text](https://github.com/InterVision/Getting-Started/blob/master/settings.png "Text For Image")  
+
+    2. Next Click on the "Emails" on the left pannel, and add your InterVision e-mail
+    ![alt text](https://github.com/InterVision/Getting-Started/blob/master/email.png "Text For Image")  
+
+    3. Go to your InterVision e-mail and wait for an message from GitHub to "verify your e-mail" and follow the instructions.  
+    
+    
+3. Once your InterVision e-mail is added, or you made your GitHub account with your InterVision e-mail, open the e-mail that was sent to you asking you to "click to join the InterVision GitHub Organization". Follow the instructions.
+
+
+# GitHub and SSH Keys
+Git is a distributed version control system, which means you can work locally
+but you can also share or "push" your changes to other servers.
+Before you can push your changes to a GitHub server
+you need a secure communication channel for sharing information.
+
+The SSH protocol provides this security and allows you to authenticate to the
+GitHub remote server without supplying your username or password each time.
+
+
+
+# Locating an existing SSH key pair
+
+Before generating a new SSH key pair check if your system already has one
+at the default location by opening a shell, or Command Prompt on Windows,
+and running the following command:  
+**Windows Command Prompt:**  
+  
+   ```
+   type %userprofile%\.ssh\id_rsa.pub
+```
+  
+**Windows Subsystem for Linux (WSL) / GNU/Linux / macOS / PowerShell / Git Bash:**  
+  ```
+  cat ~/.ssh/id_rsa.pub
+```
+  
+If you see a string starting with ssh-rsa you already have an SSH key pair
+and you can skip the generate portion of the next section and skip to the copy
+to clipboard step.
+
+If you don't see the string or would like to generate a SSH key pair with a
+custom name continue onto the next step.
+
+# Generating a new SSH key pair
+1. To generate a new SSH key pair, use the following command:  
+
+    **Windows Subsystem for Linux (WSL) / Git Bash / GNU/Linux / macOS:**  
+
+    ```
+    ssh-keygen -t rsa -C "your.email@example.com" -b 4096```
+
+    When prompted for a password, just hit "Enter" on your keyboard twice.
+2. The next step is to copy the public SSH key as we will need it afterwards.  
+
+    To copy your public SSH key to the clipboard, use the appropriate code below:  
+
+    **Windows Subsystem for Linux (WSL):**  
+
+    ```
+    cat ~/.ssh/id_rsa.pub | clip.exe```    
+
+    **macOS:**
+
+    ```
+    pbcopy < ~/.ssh/id_rsa.pub```
+
+    **GNU/Linux (requires the xclip package):**
+    ```
+    xclip -sel clip < ~/.ssh/id_rsa.pub
+    ```
+
+    **Windows Command Line:**
+
+    ```
+    type %userprofile%\.ssh\id_rsa.pub | clip
+    ```
+
+    **Git Bash on Windows / Windows PowerShell:**
+
+    ```
+    cat ~/.ssh/id_rsa.pub | clip
+    ```
+
+3. Next add your public SSH key to GitHub.  
+
+    Click Your profile at the top right corner of GitHub. Go to "Settings". 
+
+    ![alt text](https://github.com/InterVision/Getting-Started/blob/master/settings.png "Text For Image")
+
+    From Settings Click on "SSH Keys" and add a new ssh key.
+
+    ![alt text](https://github.com/InterVision/Getting-Started/blob/master/settings2.png "Text For Image")
+
+    Give your key a Title and then paste (right click > paste, or CTRL + v) in the big **Key** box. Then add the key.
+
+    ![alt text](https://github.com/InterVision/Getting-Started/blob/master/settings3.png "Text For Image")
+
+4. Add SSO to your SSH key.  
+    This step requires you to have already added your InterVision e-mail as a second or primary e-mail on your GitHub account. 
+
+    You can find out how to do this in the "How to Link Personal GitHub to IV Git" document in this Repository.  
+
+    In the same SSH keys section of settings, find your newly added key click the box that says "SSO".
+
+    ![alt text](https://github.com/InterVision/Getting-Started/blob/master/sso.png "Text For Image")
+
+    You will be taken to a page asking you to "authorize". Follow the instructions.
+    This will allow that computer to access the IV git projects.
+
+# Add your Git account to your terminal
+In your terminal do the following:  
+```
+git config --global user.name "John Doe"
+git config --global user.email johndoe@example.com
+```
+
+# Clone a Repository
+In Git, cloning is synonymous with downloading, and each project is called a Repository.  
+Cloning a Repository is simple:
+1. On the GitHub website, click on any project repository you wish to download.
+On the right you should see a button called "Download or Clone". Click this button.
+
+2. Ensure the drop down box says "Clone with SSH". If it does not, Click the blue text "Use SSH"
+
+3. Then copy the text in the text box by clicking the copy button on the right of the text.
+
+    ![alt text](https://github.com/InterVision/Getting-Started/blob/master/clone.png "Text For Image")
+
+4. Go back to your terminal. Ensure you are in the proper directory where you want to download the project.
+
+5. Type ```git clone ``` followed by pasting the link you copied earlier. For example:
+
+    ```
+    git clone git@github.com:InterVision/Getting-Started.git
+    ```
+
+6. We just downloaded a folder that contains all the code in the project. The folder name by default is the name of the repository. Using our "Getting-Started" repository as an example, this command would look like this:
+
+    ```
+    cd Getting-Started```
+
+    Now you can follow the program's instruction to run it. Or you can modify the code.
+
+# Downloading Repository Updates
+Projects are always being updated/improved. To download updates to a project go into the directory of the project and use the command:
+
+```
+git pull
+```
