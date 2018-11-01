@@ -1,0 +1,160 @@
+############# BEGIN CONFIGURATION FOR CORE 1 ###########
+!
+interface port-channel10
+switchport trunk allowed vlan remove 200
+interface port-channel11
+switchport trunk allowed vlan remove 200
+interface port-channel12
+switchport trunk allowed vlan remove 200
+interface port-channel13
+switchport trunk allowed vlan remove 200
+interface port-channel14
+switchport trunk allowed vlan remove 200
+interface port-channel15
+switchport trunk allowed vlan remove 200
+interface port-channel16
+switchport trunk allowed vlan remove 200
+exit
+no vlan 200
+exit
+!
+############# BEGIN CONFIGURATION FOR CORE 2 ###########
+!
+interface port-channel10
+switchport trunk allowed vlan remove 200
+interface port-channel11
+switchport trunk allowed vlan remove 200
+interface port-channel12
+switchport trunk allowed vlan remove 200
+interface port-channel13
+switchport trunk allowed vlan remove 200
+interface port-channel14
+switchport trunk allowed vlan remove 200
+interface port-channel15
+switchport trunk allowed vlan remove 200
+interface port-channel16
+switchport trunk allowed vlan remove 200
+exit
+no vlan 200
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 1 ###########
+!
+interface port-channel10
+switchport trunk allowed vlan remove 200
+interface port-channel11
+switchport trunk allowed vlan remove 200
+exit
+no vlan 200
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 2 ###########
+!
+interface port-channel10
+switchport trunk allowed vlan remove 200
+interface port-channel11
+switchport trunk allowed vlan remove 200
+exit
+no vlan 200
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 3 ###########
+!
+interface port-channel10
+switchport trunk allowed vlan remove 200
+interface port-channel12
+switchport trunk allowed vlan remove 200
+exit
+no vlan 200
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 4 ###########
+!
+interface port-channel10
+switchport trunk allowed vlan remove 200
+interface port-channel12
+switchport trunk allowed vlan remove 200
+exit
+no vlan 200
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 5 ###########
+!
+interface port-channel10
+switchport trunk allowed vlan remove 200
+interface port-channel13
+switchport trunk allowed vlan remove 200
+exit
+no vlan 200
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 6 ###########
+!
+interface port-channel10
+switchport trunk allowed vlan remove 200
+interface port-channel13
+switchport trunk allowed vlan remove 200
+exit
+no vlan 200
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 7 ###########
+!
+interface port-channel10
+switchport trunk allowed vlan remove 200
+interface port-channel14
+switchport trunk allowed vlan remove 200
+exit
+no vlan 200
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 8 ###########
+!
+interface port-channel10
+switchport trunk allowed vlan remove 200
+interface port-channel14
+switchport trunk allowed vlan remove 200
+exit
+no vlan 200
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 9 ###########
+!
+interface port-channel10
+switchport trunk allowed vlan remove 200
+interface port-channel15
+switchport trunk allowed vlan remove 200
+exit
+no vlan 200
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 10 ###########
+!
+interface port-channel10
+switchport trunk allowed vlan remove 200
+interface port-channel15
+switchport trunk allowed vlan remove 200
+exit
+no vlan 200
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 11 ###########
+!
+interface port-channel10
+switchport trunk allowed vlan remove 200
+interface port-channel16
+switchport trunk allowed vlan remove 200
+no vlan 200
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 12 ###########
+!
+interface port-channel10
+switchport trunk allowed vlan remove 200
+interface port-channel16
+switchport trunk allowed vlan remove 200
+exit
+no vlan 200
+exit
+!
+

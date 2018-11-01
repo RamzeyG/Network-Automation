@@ -1,0 +1,4 @@
+!
+show run int e1/3
+exit
+!

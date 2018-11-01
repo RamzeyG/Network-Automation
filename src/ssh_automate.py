@@ -101,7 +101,6 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 			curr_cmd = print_progress(config_cmds[f])
 			ssh_remote.send(config_cmds[f] + '\n')
 
-
 			time.sleep(3)
 			output = ssh_remote.recv(655350)
 			print output
@@ -122,7 +121,7 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 		else:
 			sleep_time = 5
 		cmd = line.strip()
-		if len(cmd) > 0 and '!' != cmd:
+		if len(cmd) > 0: # and '!' != cmd:
 			curr_cmd = print_progress(line)
 			# print 'cur cmd, len is ', curr_cmd, len(curr_cmd)
 			# Now we can execute commands

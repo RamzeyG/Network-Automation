@@ -1,0 +1,68 @@
+############# BEGIN CONFIGURATION FOR CORE 1 ###########
+!
+show run int e1/1
+!
+############# BEGIN CONFIGURATION FOR CORE 2 ###########
+!
+show run int e1/2
+!
+############# BEGIN CONFIGURATION FOR TOR 1 ###########
+!
+show run int e1/1
+!
+############# BEGIN CONFIGURATION FOR TOR 2 ###########
+!
+show run int e1/2
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 3 ###########
+!
+show run int e1/3
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 4 ###########
+!
+show run int e1/4
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 5 ###########
+!
+show run int e1/5
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 6 ###########
+!
+show run int e1/6
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 7 ###########
+!
+show run int e1/7
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 8 ###########
+!
+show run int e1/8
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 9 ###########
+!
+show run int e1/9
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 10 ###########
+!
+show run int e1/10
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 11 ###########
+!
+show run int e1/11
+exit
+!
+############# BEGIN CONFIGURATION FOR TOR 12 ###########
+!
+show run int e1/12
+exit
+!
+############# BEGIN CONFIGURATION DONE ###########
