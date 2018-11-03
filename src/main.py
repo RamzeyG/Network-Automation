@@ -3,7 +3,7 @@ from ssh_automate import *
 parser = argparse.ArgumentParser()
 parser.add_argument('-kfile', '--kevinfile')
 parser.add_argument('-sf', '--singlefile')
-parser.add_argument('-b', '--devicebrand', default='cisco')
+parser.add_argument('-b', '--devicebrand', default='none')
 
 args = parser.parse_args()
 

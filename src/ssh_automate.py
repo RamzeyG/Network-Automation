@@ -113,7 +113,7 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 	print command_list
 	for line in command_list:
 		if 'show' in line:
-			sleep_time = 5
+			sleep_time = 6
 		elif 'sleep 5' in line:
 			print 'SLEEP FOR % MIN**************'
 			sleep_time = 5 * 60
@@ -121,7 +121,7 @@ def execute_commands(ip_commands, ssh_remote, device_name, kevin_flag, k_file_na
 		else:
 			sleep_time = 5
 		cmd = line.strip()
-		if len(cmd) > 0: # and '!' != cmd:
+		if len(cmd) > 0 and '!' != cmd:
 			curr_cmd = print_progress(line)
 			# print 'cur cmd, len is ', curr_cmd, len(curr_cmd)
 			# Now we can execute commands

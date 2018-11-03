@@ -65,4 +65,3 @@ exit
 show run int e1/12
 exit
 !
-############# BEGIN CONFIGURATION DONE ###########

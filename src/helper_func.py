@@ -61,7 +61,9 @@ def check_kevin_file(k_file_name, kevin_flag, ip_commands, begin_found, start):
         print begin_found, start
         command_list = open(ip_commands, 'w')
         kevin_file = open(k_file_name, 'r')
-
+        # kevin_flag.seek(0, 2)  # go to end of file
+        # eof = kevin_file.tell()  # get end-of-file position
+        # kevin_file.seek(0, 0)  # go back to start of file
         for line in kevin_file:
             while begin_found <= start:
                 if line.startswith('######') and 'BEGIN CONFIG' in line:
@@ -70,7 +72,12 @@ def check_kevin_file(k_file_name, kevin_flag, ip_commands, begin_found, start):
                     command_list.write(line.strip() + '\n')
                     # print 'Writing the following cmd: [' + line.strip() + ']'
 
-                line = kevin_file.next()
+                # line = kevin_file.next()
+                line = next(kevin_file)
+                # break at end of file
+                if line == '':
+                    print 'BREAKING'
+                    break
         command_list.close()
         start += 1
         begin_found = -1
